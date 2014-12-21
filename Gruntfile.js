@@ -206,7 +206,9 @@ module.exports = function (grunt) {
     includereplace: {
       dist: {
         options: {
-          includesDir: '<%= config.app %>/partials'
+          globals: {
+            root: './',
+          }
         },
         files: [
             {src: '**/*.html', dest: '<%= config.dist %>', expand: true, cwd: '<%= config.dist %>'}
@@ -214,7 +216,9 @@ module.exports = function (grunt) {
       },
       server: {
         options: {
-          includesDir: '<%= config.app %>/partials'
+          globals: {
+            root: '/',
+          }
         },
         files: [
             {src: '**/*.html', dest: '.tmp', expand: true, cwd: '<%= config.app %>'}
@@ -236,6 +240,7 @@ module.exports = function (grunt) {
     },
 
     // The following *-min tasks produce minified files in the dist folder
+    // disabled due to package being Windows incompatible at the moment
     imagemin: {
       dist: {
         files: [{
@@ -305,7 +310,7 @@ module.exports = function (grunt) {
           dest: '<%= config.dist %>',
           src: [
             '*.{ico,png,txt}',
-            'images/{,*/}*.webp',
+            'images/{,*/}*.{gif,jpeg,jpg,png,webp}',
             '{,*/}*.html',
             '!partials/*.html',
             'styles/fonts/{,*/}*.*'
