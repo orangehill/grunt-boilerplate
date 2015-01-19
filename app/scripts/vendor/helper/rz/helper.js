@@ -103,6 +103,7 @@ function readyFunction() {
 
                                 position = x +'.'+ y;
                                 $.cookie(cookieName, position, {expires:60});
+                                console.log('Overlay Helper Position: ', position);
                             }
                         }
                     });

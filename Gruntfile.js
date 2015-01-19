@@ -54,7 +54,7 @@ module.exports = function (grunt) {
       },
       includereplace :{
           files: ['<%= config.app %>/**/*.html'],
-          tasks: ['includereplace:server'],
+          tasks: ['includereplace:development'],
           options: {
             livereload: true
           }
@@ -129,6 +129,20 @@ module.exports = function (grunt) {
           ]
         }]
       },
+      development: {
+        options: {
+          force: true
+        },
+        files: [{
+          dot: true,
+          src: [
+            '../*',
+            '!../.svn',
+            '!../.git*',
+            '!../dev'
+          ]
+        }]
+      },
       server: '.tmp'
     },
 
@@ -186,6 +200,10 @@ module.exports = function (grunt) {
     useminPrepare: {
       options: {
         dest: '<%= config.dist %>'
+
+        // Use flow when you need to disable minification
+        // flow: { steps: { 'js': ['concat'], 'css': ['concat']}, post: {}}
+        // You will also need to disable 'cssmin' and 'uglify' grunt taskts
       },
       html: '<%= config.app %>/index.html'
     },
@@ -214,7 +232,7 @@ module.exports = function (grunt) {
             {src: '**/*.html', dest: '<%= config.dist %>', expand: true, cwd: '<%= config.dist %>'}
         ]
       },
-      server: {
+      development: {
         options: {
           globals: {
             root: '/',
@@ -227,26 +245,36 @@ module.exports = function (grunt) {
     },
 
     less: {
-      development: {
-        files: {
-          '<%= config.app %>/styles/main.css': '<%= config.app %>/less/main.less'
-        },
-      },
       dist: {
         files: {
           '<%= config.dist %>/styles/main.css': '<%= config.app %>/less/main.less'
+        },
+      },
+      development: {
+        files: {
+          '<%= config.app %>/styles/main.css': '<%= config.app %>/less/main.less'
         },
       }
     },
 
     // The following *-min tasks produce minified files in the dist folder
-    // disabled due to package being Windows incompatible at the moment
     imagemin: {
       dist: {
         files: [{
           expand: true,
           cwd: '<%= config.app %>/images',
           src: '{,*/}*.{gif,jpeg,jpg,png}',
+          dest: '<%= config.dist %>/images'
+        }]
+      }
+    },
+
+    svgmin: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>/images',
+          src: '{,*/}*.svg',
           dest: '<%= config.dist %>/images'
         }]
       }
@@ -310,7 +338,7 @@ module.exports = function (grunt) {
           dest: '<%= config.dist %>',
           src: [
             '*.{ico,png,txt}',
-            'images/{,*/}*.{gif,jpeg,jpg,png,webp}',
+            'images/**/*.{gif,jpeg,jpg,png,webp}',
             '{,*/}*.html',
             '!partials/*.html',
             'styles/fonts/{,*/}*.*'
@@ -326,6 +354,18 @@ module.exports = function (grunt) {
         cwd: '<%= config.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
+      },
+      development: {
+        expand: true,
+        dot: true,
+        cwd: '<%= config.dist %>',
+        dest: '../',
+        src: [
+          '**/*.*',
+          '!partials/*.html',
+          '!head.html',
+          '!tail.html'
+        ]
       }
     },
 
@@ -346,10 +386,25 @@ module.exports = function (grunt) {
       }
     },
 
+    // Shell utility commands (for example to launch Tortoise SVN commit)
+    // closeonend:2 means close the dialog after commit is done if
+    // no errors or conflicts were detected
+    shell: {
+      commitChanges: {
+        command: [
+          'cd ' + '..',
+          'TortoiseProc.exe /command:commit /path:"." /closeonend:2'
+        ].join('&&'),
+        options: {
+          stdout: true
+        }
+      }
+    },
+
     // Run some tasks in parallel to speed up build process
     concurrent: {
       server: [
-        'includereplace:server',
+        'includereplace:development',
         'less:development'
       ],
       test: [
@@ -357,6 +412,7 @@ module.exports = function (grunt) {
       ],
       dist: [
         'less:dist',
+        'svgmin'
         // 'imagemin'
       ]
     }
@@ -401,6 +457,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('build', [
+    'clean:development',
     'clean:dist',
     'wiredep',
     'useminPrepare',
@@ -411,10 +468,14 @@ module.exports = function (grunt) {
     'uglify',
     'copy:dist',
     'modernizr',
-    'rev',
+    // 'rev',
     'usemin',
     'includereplace:dist',
     // 'htmlmin'
+    'copy:development',
+
+    // Optional Tortoise SVN commit command for Windows
+    // 'shell:commitChanges'
   ]);
 
   grunt.registerTask('default', [

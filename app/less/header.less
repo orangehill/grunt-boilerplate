@@ -1,8 +1,7 @@
 header {
     position: relative;
-    width: 100%;
-    position: relative;
     height: 130px;
+    width: 100%;
     background: url("/images/header-bg.png") repeat-x;
     img {
         float: left;
@@ -11,9 +10,30 @@ header {
         position: absolute;
         color: #555;
         top: 5px;
-        left: 200px;
+        left: 180px;
+        right: 20px;
+        font-size: 20px;
+        @media (min-width: @screen-sm-min) {
+            font-size: 25px;
+        }
+        @media (min-width: @screen-md-min) {
+            font-size: 30px;
+        }
     }
     h3 {
-        top: 50px;
+        top: 55px;
+        right: 20px;
+        font-size: 15px;
+        display: none;
+        @media (min-width: @screen-xs-min) {
+            display: block;
+        }
+        @media (min-width: @screen-sm-min) {
+            top: 50px;
+            font-size: 20px;
+        }
+        @media (min-width: @screen-md-min) {
+            font-size: 25px;
+        }
     }
 }
