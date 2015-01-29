@@ -10,6 +10,11 @@ Instructions
 
 1. Create a project folder (e.g. `/projects/orange-project`)
 2. Create a folder named `dev` in the project folder (`/projects/orange-project/dev`)
-3. Clone orange-boilerplate to `dev` folder, NOT the project folder!
+3. Download orange-boilerplate to `dev` folder. **Important: NOT the project folder!**
 4. Run `npm install` and `bower install` in `dev`. 
 5. That's it, you're ready to `grunt serve`. Have fun!
+6. When ready, build using `grunt build` and the dist will be deployed to the project folder (`/projects/orange-project`)
+
+Licence
+---
+MIT
