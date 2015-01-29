@@ -205,7 +205,7 @@ module.exports = function (grunt) {
         // flow: { steps: { 'js': ['concat'], 'css': ['concat']}, post: {}}
         // You will also need to disable 'cssmin' and 'uglify' grunt taskts
       },
-      html: '<%= config.app %>/index.html'
+      html: '<%= config.app %>/*.html'
     },
 
     // Performs rewrites based on rev and the useminPrepare configuration
