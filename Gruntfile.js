@@ -339,8 +339,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             'images/**/*.{gif,jpeg,jpg,png,webp}',
-            '{,*/}*.html',
-            '!partials/*.html',
+            '**/*.html',
             'styles/fonts/{,*/}*.*'
           ]
         }, {
@@ -473,7 +472,7 @@ module.exports = function (grunt) {
     'includereplace:dist',
     // 'htmlmin'
     'copy:development',
-
+    'clean:dist'
     // Optional Tortoise SVN commit command for Windows
     // 'shell:commitChanges'
   ]);
